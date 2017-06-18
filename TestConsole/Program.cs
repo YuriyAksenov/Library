@@ -17,7 +17,7 @@ namespace TestConsole
             //DllTestLaunch("TestLibrary.Test.dll");
             SpecialDllTestLaunch("SpecialTestLibrary.Test.dll");
 
-           
+
 
 
             Console.WriteLine("Количество пройденных тестов: " + TestPassed.Count + "\n" + "Количество не пройденных тестов: " + TestFailed.Count);
@@ -59,26 +59,16 @@ namespace TestConsole
 
             MethodInfo[] ClassTestMethods = classTest.GetMethods();
 
+            MethodInfo StartUp = null;
+
             foreach (var method in ClassTestMethods)
             {
-                try
+                if (method.GetCustomAttributes().FirstOrDefault().ToString().Contains("PrelaunchExecution"))
                 {
-                    if (method.GetCustomAttributes().FirstOrDefault().ToString().Contains("PrelaunchExecution"))
-                    {
-                        method.Invoke(obj, null);
+                    StartUp = method;
 
-                        TestPassed.Add(method.Name);
-
-                        break;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.InnerException.Message);
-                    TestFailed.Add(method.Name);
                     break;
                 }
-
             }
 
             foreach (var method in ClassTestMethods)
@@ -87,6 +77,7 @@ namespace TestConsole
                 {
                     if (method.GetCustomAttributes().FirstOrDefault().ToString().Contains("TestMethod"))
                     {
+                        StartUp?.Invoke(obj, null);
                         method.Invoke(obj, null);
 
                         TestPassed.Add(method.Name);
@@ -125,26 +116,15 @@ namespace TestConsole
 
             MethodInfo[] ClassTestMethods = classTest.GetMethods();
 
+            MethodInfo StartUp = null;
+
             foreach (var method in ClassTestMethods)
             {
-                try
+                if (method.GetCustomAttributes().FirstOrDefault().ToString().Contains("SetUpAttribute"))
                 {
-                    if (method.GetCustomAttributes().FirstOrDefault().ToString().Contains("SetUpAttribute"))
-                    {
-                        method.Invoke(obj, null);
-
-                        TestPassed.Add(method.Name);
-
-                        break;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.InnerException.Message);
-                    TestFailed.Add(method.Name);
+                    StartUp = method;
                     break;
                 }
-                
             }
 
             foreach (var method in ClassTestMethods)
@@ -153,6 +133,7 @@ namespace TestConsole
                 {
                     if (method.GetCustomAttributes().FirstOrDefault().ToString().Contains("TestAttribute"))
                     {
+                        StartUp.Invoke(obj, null);
                         method.Invoke(obj, null);
 
                         TestPassed.Add(method.Name);
