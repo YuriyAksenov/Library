@@ -74,7 +74,7 @@ namespace TestConsole
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.InnerException.Message);
                     TestFailed.Add(method.Name);
                     break;
                 }
@@ -95,7 +95,7 @@ namespace TestConsole
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.InnerException.Message);
                     TestFailed.Add(method.Name);
                 }
 
@@ -140,7 +140,7 @@ namespace TestConsole
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.InnerException.Message);
                     TestFailed.Add(method.Name);
                     break;
                 }
@@ -161,7 +161,7 @@ namespace TestConsole
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.InnerException.Message);
                     TestFailed.Add(method.Name);
                 }
 
