@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NUnit.Framework;
+using SpecialTestLibrary.Test;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -46,7 +48,7 @@ namespace TestConsole
 
             foreach (var type in typesOfDll)
             {
-                if ((type.CustomAttributes.FirstOrDefault() != null) ? type.CustomAttributes.FirstOrDefault().ToString().Contains("TestClassAttribute") : false)
+                if (type.IsDefined(typeof(TestClassAttribute)))
                 {
                     SpecialTypeTestLaunch(type);
                 }
@@ -63,7 +65,7 @@ namespace TestConsole
 
             foreach (var method in ClassTestMethods)
             {
-                if (method.GetCustomAttributes().FirstOrDefault().ToString().Contains("PrelaunchExecution"))
+                if (method.IsDefined(typeof(PrelaunchExecution)))
                 {
                     StartUp = method;
 
@@ -75,7 +77,7 @@ namespace TestConsole
             {
                 try
                 {
-                    if (method.GetCustomAttributes().FirstOrDefault().ToString().Contains("TestMethod"))
+                    if (method.IsDefined(typeof(TestMethod)))
                     {
                         StartUp?.Invoke(obj, null);
                         method.Invoke(obj, null);
@@ -103,7 +105,7 @@ namespace TestConsole
 
             foreach (var type in typesOfDll)
             {
-                if (type.CustomAttributes.FirstOrDefault().ToString().Contains("TestFixtureAttribute"))
+                if (type.IsDefined(typeof(TestFixtureAttribute)))
                 {
                     TypeTestLaunch(type);
                 }
@@ -120,7 +122,7 @@ namespace TestConsole
 
             foreach (var method in ClassTestMethods)
             {
-                if (method.GetCustomAttributes().FirstOrDefault().ToString().Contains("SetUpAttribute"))
+                if (method.IsDefined(typeof(SetUpAttribute)))
                 {
                     StartUp = method;
                     break;
@@ -131,9 +133,9 @@ namespace TestConsole
             {
                 try
                 {
-                    if (method.GetCustomAttributes().FirstOrDefault().ToString().Contains("TestAttribute"))
+                    if (method.IsDefined(typeof(TestAttribute)))
                     {
-                        StartUp.Invoke(obj, null);
+                        StartUp?.Invoke(obj, null);
                         method.Invoke(obj, null);
 
                         TestPassed.Add(method.Name);

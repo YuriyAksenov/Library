@@ -10,6 +10,16 @@ namespace LibraryApp.BusinessLayer
     public class Subscriber
     {
         /// <summary>
+        /// Returns the element at a specified index in a sequence.
+        /// </summary>
+        /// <param name="bookPosition"></param>
+        /// <returns>Book</returns>
+        public Book this[int bookPosition]
+        {
+            get { return this.Books.ElementAt(bookPosition); }
+        }
+
+        /// <summary>
         /// List of the taken books
         /// </summary>
         private List<Book> Books { get; }
@@ -88,6 +98,11 @@ namespace LibraryApp.BusinessLayer
             return this.Name == ((Subscriber)obj).Name && this.Phone == ((Subscriber)obj).Phone;
 
             return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode() ^ Phone.GetHashCode();
         }
 
         public override string ToString()

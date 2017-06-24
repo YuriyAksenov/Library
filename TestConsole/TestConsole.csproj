@@ -57,6 +57,10 @@
       <Project>{a4c649dd-0604-49d7-b55c-54f21895e410}</Project>
       <Name>Library.BusinessLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SpecialTestLibrary.Test\SpecialTestLibrary.Test.csproj">
+      <Project>{684BF99C-28FC-46F3-B8BC-1F83BBE0F734}</Project>
+      <Name>SpecialTestLibrary.Test</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

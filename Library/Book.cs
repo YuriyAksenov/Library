@@ -95,6 +95,11 @@ namespace LibraryApp.BusinessLayer
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            return Author.GetHashCode() ^ Title.GetHashCode();
+        }
+
         public override string ToString()
         {
             string rare = this.Rare ? "Rare" : "Frequent";

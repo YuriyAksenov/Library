@@ -9,6 +9,12 @@ namespace LibraryApp.BusinessLayer
     /// </summary>
     public class Library
     {
+
+        public Book this[string author, string title]
+        {
+            get { return this.Books.Find(x => x.Author == author && x.Title == title); }
+        }
+
         /// <summary>
         /// List of the books in the whole Library
         /// </summary>
@@ -122,8 +128,12 @@ namespace LibraryApp.BusinessLayer
         /// <param name="book"></param>
         public void SubscribeTheBookToTheSubscriber(Subscriber subscriber, Book book, DateTime subscribingTime)
         {
-            if (subscriber.GetTakenBooks().Count() < 5 && subscriber.GetRareBooks().Count() <= 1 && subscriber.GetOverdueTakenBooks().Count() < 1 && (book.BookSubscriber == null))
+            if (subscriber.GetTakenBooks().Count() < 5 && subscriber.GetOverdueTakenBooks().Count() < 1 && (book.BookSubscriber == null))
             {
+                if (book.Rare && subscriber.GetRareBooks().Count()>=1)
+                {
+                    return;
+                }
                 book.Subscribe(subscriber,subscribingTime);
                 subscriber.AddBook(book);
             }

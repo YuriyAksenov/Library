@@ -22,6 +22,13 @@ namespace TestLibrary.Test
         }
 
         [Test]
+        public void indexSubscriberTest()
+        {
+            this._subscriber.AddBook(_book);
+            Assert.AreEqual(_book, _subscriber[0]);
+        }
+
+        [Test]
         public void AddBookTest()
         {      
             Assert.IsEmpty(this._subscriber.GetTakenBooks());         

@@ -49,12 +49,25 @@ namespace TestLibrary.Test
         }
 
         [Test]
+        public void indexLibraryTest()
+        {
+            Library library = new Library();
+            Assert.IsEmpty(library.Books);
+
+            Book book = new Book("Гоголь", "Нос");
+
+            library.AddTheBookToTheLibrary(book);
+
+            Assert.AreEqual(book, library["Гоголь", "Нос"]);
+        }
+
+        [Test]
         public void AddTheBookToTheLibraryTest()
         {
             Library library = new Library();
             Assert.IsEmpty(library.Books);
 
-            Book book = new Book("Гоголь", "98319516888");
+            Book book = new Book("Гоголь", "Нос");
 
             library.AddTheBookToTheLibrary(book);
 
@@ -68,7 +81,7 @@ namespace TestLibrary.Test
 
             Assert.IsEmpty(library.Books);
 
-            Book book = new Book("Гоголь", "98319516888");
+            Book book = new Book("Гоголь", "Нос");
 
             library.AddTheBookToTheLibrary(book);
             library.RemoveTheBookFromTheLibrary(book);
