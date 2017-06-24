@@ -9,7 +9,12 @@ namespace LibraryApp.BusinessLayer
     /// </summary>
     public class Library
     {
-
+        /// <summary>
+        /// Returns the element at a specified index in a sequence.
+        /// </summary>
+        /// <param name="author"></param>
+        /// <param name="title"></param>
+        /// <returns>Book</returns>
         public Book this[string author, string title]
         {
             get { return this.Books.Find(x => x.Author == author && x.Title == title); }
