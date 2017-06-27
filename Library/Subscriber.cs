@@ -87,6 +87,11 @@ namespace LibraryApp.BusinessLayer
             return this.Books.Where(x => (x.Rare));
         }
 
+        protected bool Equals(Subscriber other)
+        {
+            return string.Equals(Name, other.Name) && string.Equals(Phone, other.Phone);
+        }
+
         /// <summary>
         /// Determines whether the specified Subscriber is equal to the current Subscriber.
         /// </summary>
@@ -94,15 +99,18 @@ namespace LibraryApp.BusinessLayer
         /// <returns>bool</returns>
         public override bool Equals(object obj)
         {
-            if(obj is Subscriber)
-            return this.Name == ((Subscriber)obj).Name && this.Phone == ((Subscriber)obj).Phone;
-
-            return false;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Subscriber)obj);
         }
 
         public override int GetHashCode()
         {
-            return Name.GetHashCode() ^ Phone.GetHashCode();
+            unchecked
+            {
+                return ((Name != null ? Name.GetHashCode() : 0) * 397) ^ (Phone != null ? Phone.GetHashCode() : 0);
+            }
         }
 
         public override string ToString()
