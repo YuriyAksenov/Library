@@ -4,11 +4,67 @@ using System.Linq;
 
 namespace LibraryApp.BusinessLayer
 {
+
+    public enum BookStateChanged
+    {
+        Subscribing,
+        Unsubscribing
+    }
+
+    public class AddBookEventArgs : EventArgs
+    {
+        public Book Book { get;}
+        public bool IsExecuted { get; }
+        public string Message { get; }
+
+        public AddBookEventArgs(Book book, bool isExecuted, string message)
+        {
+            Book = book;
+            IsExecuted = isExecuted;
+            Message = message;
+        }
+    }
+
+    public class AddSubscriberEventArgs : EventArgs
+    {
+        public Subscriber Subscriber { get;}
+        public bool IsExecuted { get; }
+        public string Message { get;}
+
+        public AddSubscriberEventArgs(Subscriber subscriber, bool isExecuted, string message)
+        {
+            Subscriber = subscriber;
+            IsExecuted = isExecuted;
+            Message = message;
+        }
+    }
+
+    public class BookStateChangedEventArgs : EventArgs
+    {
+        public Book Book { get; }
+        public BookStateChanged BookStateChanged { get; }
+        public bool IsExecuted {get;}
+        public string Message { get; }
+
+        public BookStateChangedEventArgs(Book book, BookStateChanged bookStateShanged, bool isExecuted, string message)
+        {
+            Book = book;
+            BookStateChanged = bookStateShanged;
+            IsExecuted = isExecuted;
+            Message = message;
+        }
+    }
+
     /// <summary>
     /// Provides the instance of Library
     /// </summary>
     public class Library
     {
+
+        public event EventHandler<AddBookEventArgs> AddBook;
+        public event EventHandler<AddSubscriberEventArgs> AddSubscriber;
+        public event EventHandler<BookStateChangedEventArgs> BookStateChanged;
+
         /// <summary>
         /// Returns the element at a specified index in a sequence.
         /// </summary>
@@ -30,13 +86,15 @@ namespace LibraryApp.BusinessLayer
         /// </summary>
         public List<Subscriber> Subscribers { get; }
 
-        public Library(): this(new List<Book>(), new List<Subscriber>()) {}
+        public Library() : this(new List<Book>(), new List<Subscriber>()) { }
 
         public Library(List<Book> books, List<Subscriber> subscribers)
         {
             this.Books = books;
             this.Subscribers = subscribers;
         }
+
+        #region Book 
 
         /// <summary>
         /// Create new instance of the book and add this into the list of books
@@ -45,6 +103,7 @@ namespace LibraryApp.BusinessLayer
         public void AddTheBookToTheLibrary(Book book)
         {
             Books.Add(book);
+            AddBook?.Invoke(this, new AddBookEventArgs(book, true, "Книга добавлена"));
         }
 
         /// <summary>
@@ -53,6 +112,8 @@ namespace LibraryApp.BusinessLayer
         /// <param name="book"></param>
         public void RemoveTheBookFromTheLibrary(Book book)
         {
+            Subscriber subscriber = book.BookSubscriber;
+            subscriber?.RemoveBook(book);
             Books.Remove(book);
         }
 
@@ -61,7 +122,7 @@ namespace LibraryApp.BusinessLayer
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns>IEnumerable</returns>
-        public IEnumerable<Book> FindBooks(Func<Book,bool> predicate)
+        public IEnumerable<Book> FindBooks(Func<Book, bool> predicate)
         {
             return this.Books.Where(predicate);
         }
@@ -71,7 +132,7 @@ namespace LibraryApp.BusinessLayer
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns>IEnumerable</returns>
-        public IEnumerable<Subscriber> FindSubscribers(Func<Subscriber,bool> predicate)
+        public IEnumerable<Subscriber> FindSubscribers(Func<Subscriber, bool> predicate)
         {
             return this.Subscribers.Where(predicate);
         }
@@ -97,6 +158,52 @@ namespace LibraryApp.BusinessLayer
         }
 
         /// <summary>
+        /// Returns IEnumerable of books which are located in library 
+        /// </summary>
+        /// <returns>IEnumerable Book</returns>
+        public IEnumerable<Book> GetAListOfBooksInTheLibrary()
+        {
+            return Books.Where(x => x.BookLocation == BookLocation.Library);
+        }
+
+        /// <summary>
+        /// Returns IEnumerable of books which belong to subscribers
+        /// </summary>
+        /// <returns>IEnumerable Book</returns>
+        public IEnumerable<Book> GetAListOfBooksFromSubscribers()
+        {
+            return this.Books.Where(x => x.BookLocation == BookLocation.Subscriber);
+        }
+
+        #endregion Book
+
+        #region Subscriber 
+
+        /// <summary>
+        /// Create new instance of the subscriber and add this into the list of books
+        /// </summary>
+        /// <param name="subscriber"></param>
+        public void AddTheSubscriberToTheLibrary(Subscriber subscriber)
+        {
+            Subscribers.Add(subscriber);
+            AddSubscriber?.Invoke(this, new AddSubscriberEventArgs(subscriber, true, "Абонент добавлен"));
+        }
+
+        /// <summary>
+        /// Removes subscriber from the list of the subscribers
+        /// </summary>
+        /// <param name="subscriber"></param>
+        public void RemoveTheSubscriberFromTheLibrary(Subscriber subscriber)
+        {
+            IEnumerable<Book> removingBooks = subscriber.GetTakenBooks();
+            foreach (var book in removingBooks)
+            {
+                subscriber.RemoveBook(book);
+            } 
+            Subscribers.Remove(subscriber);
+        }
+
+        /// <summary>
         /// Finds subscriber by input name
         /// </summary>
         /// <param name="name"></param>
@@ -116,6 +223,10 @@ namespace LibraryApp.BusinessLayer
             return this.FindSubscribers(x => x.Phone == phone);
         }
 
+        #endregion Subscriber
+
+
+        #region Subscribing / Unsubscribing 
         /// <summary>
         /// Gives instance of book to the subscriber 
         /// </summary>
@@ -135,13 +246,17 @@ namespace LibraryApp.BusinessLayer
         {
             if (subscriber.GetTakenBooks().Count() < 5 && subscriber.GetOverdueTakenBooks().Count() < 1 && (book.BookSubscriber == null))
             {
-                if (book.Rare && subscriber.GetRareBooks().Count()>=1)
+                if (book.Rare && subscriber.GetRareBooks().Count() >= 1)
                 {
                     return;
                 }
-                book.Subscribe(subscriber,subscribingTime);
+                book.Subscribe(subscriber, subscribingTime);
                 subscriber.AddBook(book);
+
+                BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Subscribing, true, "Книга выдана абоненту"));
             }
+
+            BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Subscribing, false, "Книга не выдана абоненту"));
         }
 
         /// <summary>
@@ -151,29 +266,19 @@ namespace LibraryApp.BusinessLayer
         /// <param name="book"></param>
         public void UnsubscribeTheBookFromTheSubscriber(Subscriber subscriber, Book book)
         {
-            if (!subscriber.GetTakenBooks().Any(x => x == book)) return;
+            if (!subscriber.GetTakenBooks().Any(x => x == book))
+            {
+                BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Unsubscribing, false, "Книга не принята от абонента"));
+                return;
+            }
 
             book.Unsubscribe();
             subscriber.RemoveBook(book);
+
+            BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Unsubscribing, true, "Книга принята от абонента"));
         }
 
-        /// <summary>
-        /// Returns IEnumerable of books which are located in library 
-        /// </summary>
-        /// <returns>IEnumerable Book</returns>
-        public IEnumerable<Book> GetAListOfBooksInTheLibrary()
-        {
-            return Books.Where(x => x.BookLocation == BookLocation.Library);
-        }
-
-        /// <summary>
-        /// Returns IEnumerable of books which belong to subscribers
-        /// </summary>
-        /// <returns>IEnumerable Book</returns>
-        public IEnumerable<Book> GetAListOfBooksFromSubscribers()
-        {
-            return this.Books.Where(x => x.BookLocation == BookLocation.Subscriber);
-        }
+        #endregion Subscribing / Unsubscribing
 
     }
 }

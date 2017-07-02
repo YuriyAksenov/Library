@@ -22,7 +22,7 @@ namespace TestLibrary.Test
         }
 
         [Test]
-        public void indexSubscriberTest()
+        public void IndexSubscriberTest()
         {
             this._subscriber.AddBook(_book);
             Assert.AreEqual(_book, _subscriber[0]);

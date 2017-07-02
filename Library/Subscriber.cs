@@ -9,6 +9,7 @@ namespace LibraryApp.BusinessLayer
     /// </summary>
     public class Subscriber
     {
+
         /// <summary>
         /// Returns the element at a specified index in a sequence.
         /// </summary>
@@ -48,7 +49,7 @@ namespace LibraryApp.BusinessLayer
         /// <param name="book"></param>
         public void AddBook(Book book)
         {
-            this.Books.Add(book);
+                this.Books.Add(book);
         }
 
         /// <summary>

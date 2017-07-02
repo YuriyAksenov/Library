@@ -49,7 +49,7 @@ namespace TestLibrary.Test
         }
 
         [Test]
-        public void indexLibraryTest()
+        public void IndexLibraryTest()
         {
             Library library = new Library();
             Assert.IsEmpty(library.Books);
@@ -117,6 +117,34 @@ namespace TestLibrary.Test
             }
 
             Assert.AreEqual(rightCountOfTitleBooks.Count(), k);
+        }
+
+        [Test]
+        public void AddTheSubcsriberToTheLibraryTest()
+        {
+            Library library = new Library();
+            Assert.IsEmpty(library.Subscribers);
+
+            Subscriber subscriber = new Subscriber("Антон", "125689743");
+
+            library.AddTheSubscriberToTheLibrary(subscriber);
+
+            Assert.AreEqual(subscriber, library.Subscribers.FirstOrDefault());
+        }
+
+        [Test]
+        public void RemoveTheSubscriberFromTheLibrayTest()
+        {
+            Library library = new Library();
+
+            Assert.IsEmpty(library.Subscribers);
+
+            Subscriber subscriber = new Subscriber("Антон", "125689743");
+
+            library.AddTheSubscriberToTheLibrary(subscriber);
+            library.RemoveTheSubscriberFromTheLibrary(subscriber);
+
+            Assert.IsEmpty(library.Subscribers);
         }
 
         [Test]
@@ -206,7 +234,56 @@ namespace TestLibrary.Test
             Assert.AreEqual(rightListOfBooks.Count(), k);
         }
 
-        
+        [Test]
+        public void AddBookTest()
+        {
+            Library library = new Library();
+            Assert.IsEmpty(library.Books);
 
+            Book book = new Book("Гоголь", "Нос");
+
+            library.AddBook += delegate(object sender, AddBookEventArgs e)
+            {
+                Assert.AreEqual(book, e.Book);
+            };
+
+            library.AddTheBookToTheLibrary(book);
+        }
+
+        [Test]
+        public void AddSubscriberTest()
+        {
+            Library library = new Library();
+            Assert.IsEmpty(library.Subscribers);
+
+            Subscriber subscriber = new Subscriber("Михаил", "89996687956");
+
+            library.AddSubscriber += delegate (object sender, AddSubscriberEventArgs e)
+            {
+                Assert.AreEqual(subscriber, e.Subscriber);
+            };
+
+            library.AddTheSubscriberToTheLibrary(subscriber);
+        }
+
+
+        [Test]
+        public void BookStateChangedTest()
+        {
+            var subscriber = this._library.Subscribers.FirstOrDefault();
+            var book = this._library.Books.FirstOrDefault();
+
+            _library.BookStateChanged += delegate (object sender, BookStateChangedEventArgs e)
+            {
+
+                if (e.BookStateChanged != BookStateChanged.Subscribing && e.BookStateChanged != BookStateChanged.Unsubscribing)
+                { Assert.Fail(); }
+            };
+
+            this._library.SubscribeTheBookToTheSubscriber(subscriber, book);
+            this._library.UnsubscribeTheBookFromTheSubscriber(subscriber, book);
+
+
+        }
     }
 }
