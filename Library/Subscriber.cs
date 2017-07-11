@@ -15,10 +15,8 @@ namespace LibraryApp.BusinessLayer
         /// </summary>
         /// <param name="bookPosition"></param>
         /// <returns>Book</returns>
-        public Book this[int bookPosition]
-        {
-            get { return this.Books.ElementAt(bookPosition); }
-        }
+        public Book this[int bookPosition] => Books.ElementAt(bookPosition);
+
 
         /// <summary>
         /// List of the taken books
@@ -47,51 +45,35 @@ namespace LibraryApp.BusinessLayer
         /// Adds book into the taken books
         /// </summary>
         /// <param name="book"></param>
-        public void AddBook(Book book)
-        {
-                this.Books.Add(book);
-        }
+        public void AddBook(Book book) => Books.Add(book);
 
         /// <summary>
         /// REmoves book from the taken books
         /// </summary>
         /// <param name="book"></param>
-        public void RemoveBook(Book book)
-        {
-            this.Books.Remove(book);
-        }
+        public void RemoveBook(Book book) => Books.Remove(book);
 
         /// <summary>
         /// Returns the bunch of the take books of the subscriber
         /// </summary>
         /// <returns>IEnumerable Book</returns>
-        public IEnumerable<Book> GetTakenBooks()
-        {
-            return this.Books;
-        }
+        public IEnumerable<Book> GetTakenBooks() => Books;
 
         /// <summary>
         /// Returns the overdue books of the subscriber
         /// </summary>
         /// <returns>IEnumerable Book</returns>
-        public IEnumerable<Book> GetOverdueTakenBooks()
-        {
-            return this.Books.Where(x => ((DateTime.Now - x.IssueDate).Days >= 14));
-        }
+        public IEnumerable<Book> GetOverdueTakenBooks() => Books.Where(x => ((DateTime.Now - x.IssueDate).Days >= 14));
+        
 
         /// <summary>
         /// Gets the rare books
         /// </summary>
         /// <returns>IEnumerableBook</returns>
-        public IEnumerable<Book> GetRareBooks()
-        {
-            return this.Books.Where(x => (x.Rare));
-        }
+        public IEnumerable<Book> GetRareBooks() => Books.Where(x => (x.Rare));
 
-        protected bool Equals(Subscriber other)
-        {
-            return string.Equals(Name, other.Name) && string.Equals(Phone, other.Phone);
-        }
+        protected bool Equals(Subscriber other) => string.Equals(Name, other.Name) && string.Equals(Phone, other.Phone);
+
 
         /// <summary>
         /// Determines whether the specified Subscriber is equal to the current Subscriber.
@@ -114,9 +96,6 @@ namespace LibraryApp.BusinessLayer
             }
         }
 
-        public override string ToString()
-        {
-            return $"Name: {this.Name,-5} Title: {this.Phone,-5}";
-        }
+        public override string ToString() => $"Name: {this.Name,-5} Title: {this.Phone,-5}";
     }
 }

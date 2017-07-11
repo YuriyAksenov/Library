@@ -24,18 +24,9 @@ namespace LibraryApp.BusinessLayer
         /// <summary>
         /// The location of the book
         /// </summary>
-        public BookLocation BookLocation
-        {
-            get
-            {
-                return BookSubscriber == null ? BookLocation.Library : BookLocation.Subscriber;
-            }
-        }
+        public BookLocation BookLocation=> BookSubscriber == null ? BookLocation.Library : BookLocation.Subscriber;
 
-        public bool ComparingTheMainParametersOfTheBook(Book book)
-        {
-            return this.Author == book.Author && this.Title == book.Title && this.Rare == book.Rare;
-        }
+        public bool ComparingTheMainParametersOfTheBook(Book book)=> Author == book.Author && Title == book.Title && Rare == book.Rare;
 
         /// <summary>
         /// Date of the issue book
@@ -63,10 +54,7 @@ namespace LibraryApp.BusinessLayer
         /// Subscribes to this book
         /// </summary>
         /// <param name="subscriber"></param>
-        public void Subscribe(Subscriber subscriber) 
-        {
-            this.Subscribe(subscriber, DateTime.Now);
-        }
+        public void Subscribe(Subscriber subscriber) => Subscribe(subscriber, DateTime.Now);
 
         /// <summary>
         /// Subscribes to this book and sets a specific time
@@ -95,10 +83,7 @@ namespace LibraryApp.BusinessLayer
             return false;
         }
 
-        public override int GetHashCode()
-        {
-            return Author.GetHashCode() ^ Title.GetHashCode();
-        }
+        public override int GetHashCode()=> Author.GetHashCode() ^ Title.GetHashCode();
 
         public override string ToString()
         {

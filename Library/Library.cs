@@ -71,10 +71,7 @@ namespace LibraryApp.BusinessLayer
         /// <param name="author"></param>
         /// <param name="title"></param>
         /// <returns>Book</returns>
-        public Book this[string author, string title]
-        {
-            get { return this.Books.Find(x => x.Author == author && x.Title == title); }
-        }
+        public Book this[string author, string title] => Books.Find(x => x.Author == author && x.Title == title);
 
         /// <summary>
         /// List of the books in the whole Library
@@ -122,58 +119,40 @@ namespace LibraryApp.BusinessLayer
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns>IEnumerable</returns>
-        public IEnumerable<Book> FindBooks(Func<Book, bool> predicate)
-        {
-            return this.Books.Where(predicate);
-        }
+        public IEnumerable<Book> FindBooks(Func<Book, bool> predicate)=> Books.Where(predicate);
 
         /// <summary>
         /// Finds subscriber sby predicate
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns>IEnumerable</returns>
-        public IEnumerable<Subscriber> FindSubscribers(Func<Subscriber, bool> predicate)
-        {
-            return this.Subscribers.Where(predicate);
-        }
+        public IEnumerable<Subscriber> FindSubscribers(Func<Subscriber, bool> predicate) => Subscribers.Where(predicate);
 
         /// <summary>
         /// Find and returns a bunch of books which author is contains transmitted value
         /// </summary>
         /// <param name="author"></param>
         /// <returns>IEnumerable Book</returns>
-        public IEnumerable<Book> FindBooksByAuthor(string author)
-        {
-            return this.FindBooks(x => x.Author.Contains(author));
-        }
+        public IEnumerable<Book> FindBooksByAuthor(string author)=> FindBooks(x => x.Author.Contains(author));
 
         /// <summary>
         /// Find and returns a bunch of books which title is contains transmitted value
         /// </summary>
         /// <param name="title"></param>
         /// <returns>IEnumerable Book</returns>
-        public IEnumerable<Book> FindBooksByTitle(string title)
-        {
-            return this.FindBooks(x => x.Title.Contains(title));
-        }
+        public IEnumerable<Book> FindBooksByTitle(string title)=> FindBooks(x => x.Title.Contains(title));
 
         /// <summary>
         /// Returns IEnumerable of books which are located in library 
         /// </summary>
         /// <returns>IEnumerable Book</returns>
-        public IEnumerable<Book> GetAListOfBooksInTheLibrary()
-        {
-            return Books.Where(x => x.BookLocation == BookLocation.Library);
-        }
+        public IEnumerable<Book> GetAListOfBooksInTheLibrary()=> Books.Where(x => x.BookLocation == BookLocation.Library);
 
         /// <summary>
         /// Returns IEnumerable of books which belong to subscribers
         /// </summary>
         /// <returns>IEnumerable Book</returns>
-        public IEnumerable<Book> GetAListOfBooksFromSubscribers()
-        {
-            return this.Books.Where(x => x.BookLocation == BookLocation.Subscriber);
-        }
+        public IEnumerable<Book> GetAListOfBooksFromSubscribers()=> Books.Where(x => x.BookLocation == BookLocation.Subscriber);
 
         #endregion Book
 
@@ -208,20 +187,14 @@ namespace LibraryApp.BusinessLayer
         /// </summary>
         /// <param name="name"></param>
         /// <returns>Subscriber</returns>
-        public IEnumerable<Subscriber> FindTheSubscriberByName(string name)
-        {
-            return this.FindSubscribers(x => x.Name == name);
-        }
+        public IEnumerable<Subscriber> FindTheSubscriberByName(string name) => FindSubscribers(x => x.Name == name);
 
         /// <summary>
         /// Finds subscriber by a phone
         /// </summary>
         /// <param name="phone"></param>
         /// <returns>Subscriber</returns>
-        public IEnumerable<Subscriber> FindTheSubscriberByPhone(string phone)
-        {
-            return this.FindSubscribers(x => x.Phone == phone);
-        }
+        public IEnumerable<Subscriber> FindTheSubscriberByPhone(string phone) => FindSubscribers(x => x.Phone == phone);
 
         #endregion Subscriber
 
@@ -232,10 +205,7 @@ namespace LibraryApp.BusinessLayer
         /// </summary>
         /// <param name="subscriber"></param>
         /// <param name="book"></param>
-        public void SubscribeTheBookToTheSubscriber(Subscriber subscriber, Book book)
-        {
-            this.SubscribeTheBookToTheSubscriber(subscriber, book, DateTime.Now);
-        }
+        public void SubscribeTheBookToTheSubscriber(Subscriber subscriber, Book book) => SubscribeTheBookToTheSubscriber(subscriber, book, DateTime.Now);
 
         /// <summary>
         /// Gives instance of book to the subscriber and sets a specific time
@@ -248,15 +218,17 @@ namespace LibraryApp.BusinessLayer
             {
                 if (book.Rare && subscriber.GetRareBooks().Count() >= 1)
                 {
+                    BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Subscribing, false, "Книга не выдана абоненту, так как редкая книга уже имеется у абонента."));
                     return;
                 }
                 book.Subscribe(subscriber, subscribingTime);
                 subscriber.AddBook(book);
 
-                BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Subscribing, true, "Книга выдана абоненту"));
+                BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Subscribing, true, "Книга выдана абоненту."));
+                return;
             }
 
-            BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Subscribing, false, "Книга не выдана абоненту"));
+            BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Subscribing, false, "Книга не выдана абоненту."));
         }
 
         /// <summary>
