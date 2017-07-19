@@ -198,7 +198,6 @@ namespace LibraryApp.BusinessLayer
 
         #endregion Subscriber
 
-
         #region Subscribing / Unsubscribing 
         /// <summary>
         /// Gives instance of book to the subscriber 
