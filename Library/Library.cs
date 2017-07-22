@@ -292,10 +292,41 @@ namespace LibraryApp.BusinessLayer
 
         #endregion Subscribing / Unsubscribing
 
+        #region Save to file /Load from file
+
+        [OnDeserializing]
+        public void PrepareForDeserialization(StreamingContext context)
+        {
+            Console.WriteLine(context.Context);
+            //using (FileStream fs = new FileStream("D:\\Кронштадт\\C#\\Library\\log.txt", FileMode.OpenOrCreate))
+            //{
+            //    var array = System.Text.Encoding.Default.GetBytes(context.Context.ToString());
+            //    fs.Write(array,0, array.Length);
+            //}
+        }
+
+        public void SaveToFile(Library library, string path)
+        {
+            //throw new NotImplementedException();
+            var serializer = new DataContractSerializer(typeof(Library), null, 1000, false, true, null);
+            var xmlWriterSettings = new XmlWriterSettings { Indent = true };
+
+            using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                using (var xmlWriter = XmlWriter.Create(fs, xmlWriterSettings))
+                {
+                    serializer.WriteObject(xmlWriter, library);
+                }
+            }
+
+        }
+
         public Library LoadFromFile(string path)
         {
+            //Сообщение: System.Runtime.Serialization.SerializationException : Коллекция типа "System.Collections.Generic.List`1[[LibraryApp.BusinessLayer.Book, Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]", предназначенная только для возвращения, вернула значение null. Входной поток включает элементы коллекции, которые невозможно добавить, если значением экземпляра является null. Попробуйте инициализировать коллекцию в методе getter.
             var serializer = new DataContractSerializer(typeof(Library), null, 1000, false, true, null);
-            
+            var xmlReaderSettings = new XmlReaderSettings { };
+
             using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
             {
                 using (var xmlReader = XmlReader.Create(fs))
@@ -305,21 +336,6 @@ namespace LibraryApp.BusinessLayer
             }
         }
 
-        public void SaveToFile(Library library, string path)
-        {
-            //throw new NotImplementedException();
-            var serializer  = new DataContractSerializer(typeof(Library), null, 1000, false, true, null);
-            var xmlWriterSettings = new XmlWriterSettings { Indent = true };
-            
-            using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
-            {
-                using (var xmlWriter = XmlWriter.Create(fs, xmlWriterSettings))
-                {
-                    serializer.WriteObject(xmlWriter, library);
-                }
-            }
-            
-        }
-
+        #endregion Save to a file /Load from a file
     }
 }
