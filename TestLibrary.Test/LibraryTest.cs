@@ -282,8 +282,39 @@ namespace TestLibrary.Test
 
             this._library.SubscribeTheBookToTheSubscriber(subscriber, book);
             this._library.UnsubscribeTheBookFromTheSubscriber(subscriber, book);
+        }
 
+        [Test]
+        public void LoadFromFileTest()
+        {
+            var subscriber1 = this._library.Subscribers.Where(x => x.Name == "Лев").FirstOrDefault();
+            var subscriber2 = this._library.Subscribers.Where(x => x.Name == "Антон").FirstOrDefault();
 
+            var book1 = this._library.Books.Where(x => x.Title == "Мертвые души").FirstOrDefault();
+            var book2 = this._library.Books.Where(x => x.Title == "Гроза").FirstOrDefault();
+            var book3 = this._library.Books.Where(x => x.Title == "Повесть временных лет").FirstOrDefault();
+
+            var library = _library.LoadFromFile("D:\\Кронштадт\\C#\\Library\\test.txt");
+
+            Assert.AreEqual(library, _library);
+
+        }
+
+        [Test]
+        public void SaveToFileTest()
+        {
+            var subscriber1 = this._library.Subscribers.Where(x => x.Name == "Лев").FirstOrDefault();
+            var subscriber2 = this._library.Subscribers.Where(x => x.Name == "Антон").FirstOrDefault();
+
+            var book1 = this._library.Books.Where(x => x.Title == "Мертвые души").FirstOrDefault();
+            var book2 = this._library.Books.Where(x => x.Title == "Гроза").FirstOrDefault();
+            var book3 = this._library.Books.Where(x => x.Title == "Повесть временных лет").FirstOrDefault();
+
+            this._library.SubscribeTheBookToTheSubscriber(subscriber1, book1);
+            this._library.SubscribeTheBookToTheSubscriber(subscriber1, book2);
+            this._library.SubscribeTheBookToTheSubscriber(subscriber2, book3);
+
+            _library.SaveToFile(_library, "D:\\Кронштадт\\C#\\Library\\test.txt");
         }
     }
 }

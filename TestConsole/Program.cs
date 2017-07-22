@@ -35,7 +35,6 @@ namespace TestConsole
             {
                 Console.WriteLine(item);
             }
-
         }
 
         static void SpecialDllTestLaunch(string pathToLoadDll)

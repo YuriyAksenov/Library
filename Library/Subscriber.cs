@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace LibraryApp.BusinessLayer
 {
     /// <summary>
     /// Provides the instance of Subscriber
     /// </summary>
+    [DataContract]
     public class Subscriber
     {
 
@@ -17,21 +19,23 @@ namespace LibraryApp.BusinessLayer
         /// <returns>Book</returns>
         public Book this[int bookPosition] => Books.ElementAt(bookPosition);
 
-
         /// <summary>
         /// List of the taken books
         /// </summary>
-        private List<Book> Books { get; }
+        [DataMember]
+        private List<Book> Books { get; set; }
 
         /// <summary>
         /// Name of the subscriber
         /// </summary>
-        public string Name { get; }
+        [DataMember]
+        public string Name { get; private set; }
 
         /// <summary>
         /// Phone of the subscriber
         /// </summary>
-        public string Phone { get; }
+        [DataMember]
+        public string Phone { get; private set; }
 
         public Subscriber(string name, string phone)
         {

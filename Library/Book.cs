@@ -1,40 +1,52 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace LibraryApp.BusinessLayer
 {
+
+    [DataContract]
+    public enum BookLocation
+    {
+        Library = 1,
+        Subscriber = 2
+    }
+
     /// <summary>
     /// Provides the instance of book
     /// </summary>
+    [DataContract]
     public class Book
     {
         /// <summary>
         /// Author of the book
         /// </summary>
-        public string Author { get; }
+        [DataMember]
+        public string Author { get; private set; }
         /// <summary>
         /// Title of the book
         /// </summary>
-        public string Title { get; }
+        [DataMember]
+        public string Title { get; private set; }
         /// <summary>
         /// Mark of the rare book
         /// </summary>
-        public bool Rare { get; }
-
+        [DataMember]
+        public bool Rare { get; private set; }
 
         /// <summary>
         /// The location of the book
         /// </summary>
         public BookLocation BookLocation=> BookSubscriber == null ? BookLocation.Library : BookLocation.Subscriber;
 
-        public bool ComparingTheMainParametersOfTheBook(Book book)=> Author == book.Author && Title == book.Title && Rare == book.Rare;
-
         /// <summary>
         /// Date of the issue book
         /// </summary>
+        [DataMember(EmitDefaultValue = false)]
         public DateTime IssueDate { get; private set; }
         /// <summary>
         /// Represents the instance of the owner of the book
         /// </summary>
+        [DataMember(EmitDefaultValue = false)]
         public Subscriber BookSubscriber { get; private set; } = null;
 
         /// <summary>
@@ -83,6 +95,8 @@ namespace LibraryApp.BusinessLayer
             return false;
         }
 
+        public bool ComparingTheMainParametersOfTheBook(Book book) => Author == book.Author && Title == book.Title && Rare == book.Rare;
+
         public override int GetHashCode()=> Author.GetHashCode() ^ Title.GetHashCode();
 
         public override string ToString()
@@ -92,11 +106,6 @@ namespace LibraryApp.BusinessLayer
         }
     }
 
-
-    public enum BookLocation
-    {
-        Library = 1,
-        Subscriber = 2
-    }
+    
 
 }

@@ -1,19 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Xml;
 
 namespace LibraryApp.BusinessLayer
 {
-
+    [DataContract]
     public enum BookStateChanged
     {
         Subscribing,
         Unsubscribing
     }
 
+    /// <summary>
+    /// Represents errors that occur during unsubscribing.
+    /// </summary>
+    public class UnsubscribingException : Exception
+    {
+        public Subscriber subscriber { get; }
+        public Book book { get; }
+
+        public UnsubscribingException() : this("UnsubscribingException") { }
+        public UnsubscribingException(string message) : this(message, null, null) { }
+        public UnsubscribingException(string message, Subscriber subscriber, Book book) : base(message)
+        {
+            this.subscriber = subscriber;
+            this.book = book;
+        }
+    }
+
+    /// <summary>
+    /// Represents errors that occur during Subscribing.
+    /// </summary>
+    public class SubscribingException : Exception
+    {
+        public Subscriber subscriber { get; }
+        public Book book { get; }
+
+        public SubscribingException() : this("SubscribingException") { }
+        public SubscribingException(string message) : this(message, null, null) { }
+        public SubscribingException(string message, Subscriber subscriber, Book book) : base(message)
+        {
+            this.subscriber = subscriber;
+            this.book = book;
+        }
+    }
+
+
     public class AddBookEventArgs : EventArgs
     {
-        public Book Book { get;}
+        public Book Book { get; }
         public bool IsExecuted { get; }
         public string Message { get; }
 
@@ -27,9 +65,9 @@ namespace LibraryApp.BusinessLayer
 
     public class AddSubscriberEventArgs : EventArgs
     {
-        public Subscriber Subscriber { get;}
+        public Subscriber Subscriber { get; }
         public bool IsExecuted { get; }
-        public string Message { get;}
+        public string Message { get; }
 
         public AddSubscriberEventArgs(Subscriber subscriber, bool isExecuted, string message)
         {
@@ -43,7 +81,7 @@ namespace LibraryApp.BusinessLayer
     {
         public Book Book { get; }
         public BookStateChanged BookStateChanged { get; }
-        public bool IsExecuted {get;}
+        public bool IsExecuted { get; }
         public string Message { get; }
 
         public BookStateChangedEventArgs(Book book, BookStateChanged bookStateShanged, bool isExecuted, string message)
@@ -58,9 +96,9 @@ namespace LibraryApp.BusinessLayer
     /// <summary>
     /// Provides the instance of Library
     /// </summary>
+    [DataContract]
     public class Library
     {
-
         public event EventHandler<AddBookEventArgs> AddBook;
         public event EventHandler<AddSubscriberEventArgs> AddSubscriber;
         public event EventHandler<BookStateChangedEventArgs> BookStateChanged;
@@ -76,11 +114,13 @@ namespace LibraryApp.BusinessLayer
         /// <summary>
         /// List of the books in the whole Library
         /// </summary>
+        [DataMember]
         public List<Book> Books { get; }
 
         /// <summary>
         /// List of the subscriber in the whole Library
         /// </summary>
+        [DataMember]
         public List<Subscriber> Subscribers { get; }
 
         public Library() : this(new List<Book>(), new List<Subscriber>()) { }
@@ -119,7 +159,7 @@ namespace LibraryApp.BusinessLayer
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns>IEnumerable</returns>
-        public IEnumerable<Book> FindBooks(Func<Book, bool> predicate)=> Books.Where(predicate);
+        public IEnumerable<Book> FindBooks(Func<Book, bool> predicate) => Books.Where(predicate);
 
         /// <summary>
         /// Finds subscriber sby predicate
@@ -133,26 +173,26 @@ namespace LibraryApp.BusinessLayer
         /// </summary>
         /// <param name="author"></param>
         /// <returns>IEnumerable Book</returns>
-        public IEnumerable<Book> FindBooksByAuthor(string author)=> FindBooks(x => x.Author.Contains(author));
+        public IEnumerable<Book> FindBooksByAuthor(string author) => FindBooks(x => x.Author.Contains(author));
 
         /// <summary>
         /// Find and returns a bunch of books which title is contains transmitted value
         /// </summary>
         /// <param name="title"></param>
         /// <returns>IEnumerable Book</returns>
-        public IEnumerable<Book> FindBooksByTitle(string title)=> FindBooks(x => x.Title.Contains(title));
+        public IEnumerable<Book> FindBooksByTitle(string title) => FindBooks(x => x.Title.Contains(title));
 
         /// <summary>
         /// Returns IEnumerable of books which are located in library 
         /// </summary>
         /// <returns>IEnumerable Book</returns>
-        public IEnumerable<Book> GetAListOfBooksInTheLibrary()=> Books.Where(x => x.BookLocation == BookLocation.Library);
+        public IEnumerable<Book> GetAListOfBooksInTheLibrary() => Books.Where(x => x.BookLocation == BookLocation.Library);
 
         /// <summary>
         /// Returns IEnumerable of books which belong to subscribers
         /// </summary>
         /// <returns>IEnumerable Book</returns>
-        public IEnumerable<Book> GetAListOfBooksFromSubscribers()=> Books.Where(x => x.BookLocation == BookLocation.Subscriber);
+        public IEnumerable<Book> GetAListOfBooksFromSubscribers() => Books.Where(x => x.BookLocation == BookLocation.Subscriber);
 
         #endregion Book
 
@@ -178,7 +218,7 @@ namespace LibraryApp.BusinessLayer
             foreach (var book in removingBooks)
             {
                 subscriber.RemoveBook(book);
-            } 
+            }
             Subscribers.Remove(subscriber);
         }
 
@@ -214,21 +254,19 @@ namespace LibraryApp.BusinessLayer
         /// <param name="book"></param>
         public void SubscribeTheBookToTheSubscriber(Subscriber subscriber, Book book, DateTime subscribingTime)
         {
-            if (subscriber.GetTakenBooks().Count() < 5 && subscriber.GetOverdueTakenBooks().Count() < 1 && (book.BookSubscriber == null))
-            {
-                if (book.Rare && subscriber.GetRareBooks().Count() >= 1)
-                {
-                    BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Subscribing, false, "Книга не выдана абоненту, так как редкая книга уже имеется у абонента."));
-                    return;
-                }
-                book.Subscribe(subscriber, subscribingTime);
-                subscriber.AddBook(book);
+            if (subscriber == null) throw new ArgumentNullException("subsriber", "Sibscriber is null");
+            if (book == null) throw new ArgumentNullException("book", "Book is null");
+            if (subscriber.GetTakenBooks().Count() >= 5) throw new SubscribingException("У абонента превышен лимит книг", subscriber, book);
+            if (subscriber.GetOverdueTakenBooks().Any()) throw new SubscribingException("У абонента есть просроченные книги", subscriber, book);
+            if (book.BookSubscriber != null) throw new SubscribingException("Книга уже у другого абонента", subscriber, book);
+            if (book.Rare && subscriber.GetRareBooks().Any()) throw new SubscribingException("У абонента уже есть редкая книга", subscriber, book);
 
-                BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Subscribing, true, "Книга выдана абоненту."));
-                return;
-            }
+            book.Subscribe(subscriber, subscribingTime);
+            subscriber.AddBook(book);
 
-            BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Subscribing, false, "Книга не выдана абоненту."));
+            BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Subscribing, true, "Книга выдана абоненту."));
+
+            //BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Subscribing, false, "Книга не выдана абоненту, так как редкая книга уже имеется у абонента."));
         }
 
         /// <summary>
@@ -238,10 +276,13 @@ namespace LibraryApp.BusinessLayer
         /// <param name="book"></param>
         public void UnsubscribeTheBookFromTheSubscriber(Subscriber subscriber, Book book)
         {
+            if (subscriber == null) throw new ArgumentNullException("subsriber", "Sibscriber is null");
+            if (book == null) throw new ArgumentNullException("book", "Book is null");
+
             if (!subscriber.GetTakenBooks().Any(x => x == book))
             {
-                BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Unsubscribing, false, "Книга не принята от абонента"));
-                return;
+                //BookStateChanged?.Invoke(this, new BookStateChangedEventArgs(book, BusinessLayer.BookStateChanged.Unsubscribing, false, "Книга не принята от абонента"));
+                throw new UnsubscribingException("Subscriber does not have trasmitted book in taken books", subscriber, book);
             }
 
             book.Unsubscribe();
@@ -251,6 +292,35 @@ namespace LibraryApp.BusinessLayer
         }
 
         #endregion Subscribing / Unsubscribing
+
+        public Library LoadFromFile(string path)
+        {
+            var serializer = new DataContractSerializer(typeof(Library), null, 1000, false, true, null);
+            
+            using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                using (var xmlReader = XmlReader.Create(fs))
+                {
+                    return (Library)serializer.ReadObject(xmlReader);
+                }
+            }
+        }
+
+        public void SaveToFile(Library library, string path)
+        {
+            //throw new NotImplementedException();
+            var serializer  = new DataContractSerializer(typeof(Library), null, 1000, false, true, null);
+            var xmlWriterSettings = new XmlWriterSettings { Indent = true };
+            
+            using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                using (var xmlWriter = XmlWriter.Create(fs, xmlWriterSettings))
+                {
+                    serializer.WriteObject(xmlWriter, library);
+                }
+            }
+            
+        }
 
     }
 }
