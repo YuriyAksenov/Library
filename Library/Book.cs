@@ -7,7 +7,9 @@ namespace LibraryApp.BusinessLayer
     [DataContract]
     public enum BookLocation
     {
+        [EnumMember]
         Library = 1,
+        [EnumMember]
         Subscriber = 2
     }
 

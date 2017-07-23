@@ -1,130 +1,123 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Library xmlns:i="http://www.w3.org/2001/XMLSchema-instance" z:Id="1" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/LibraryApp.BusinessLayer">
-  <Books z:Size="12">
-    <Book z:Id="2">
-      <Author z:Id="3">Толстой</Author>
+  <Books z:Id="2" z:Size="12">
+    <Book z:Id="3">
+      <Author z:Id="4">Толстой</Author>
       <Rare>false</Rare>
-      <Title z:Id="4">Война и мир</Title>
+      <Title z:Id="5">Война и мир</Title>
     </Book>
-    <Book z:Id="5">
-      <Author z:Ref="3" i:nil="true" />
+    <Book z:Id="6">
+      <Author z:Ref="4" i:nil="true" />
       <Rare>false</Rare>
-      <Title z:Id="6">Анна Каренина</Title>
+      <Title z:Id="7">Анна Каренина</Title>
     </Book>
-    <Book z:Id="7">
-      <Author z:Ref="3" i:nil="true" />
+    <Book z:Id="8">
+      <Author z:Ref="4" i:nil="true" />
       <Rare>false</Rare>
-      <Title z:Id="8">Детство</Title>
-    </Book>
-    <Book z:Id="9">
-      <Author z:Ref="3" i:nil="true" />
-      <Rare>false</Rare>
-      <Title z:Ref="8" i:nil="true" />
+      <Title z:Id="9">Детство</Title>
     </Book>
     <Book z:Id="10">
-      <Author z:Id="11">Чехов</Author>
+      <Author z:Ref="4" i:nil="true" />
+      <Rare>false</Rare>
+      <Title z:Ref="9" i:nil="true" />
+    </Book>
+    <Book z:Id="11">
+      <Author z:Id="12">Чехов</Author>
       <Rare>true</Rare>
-      <Title z:Id="12">Вишневый сад</Title>
+      <Title z:Id="13">Вишневый сад</Title>
     </Book>
-    <Book z:Id="13">
-      <Author z:Id="14">Гоголь</Author>
+    <Book z:Id="14">
+      <Author z:Id="15">Гоголь</Author>
+      <BookSubscriber z:Id="16">
+        <Books z:Id="17" z:Size="2">
+          <Book z:Ref="14" i:nil="true" />
+          <Book z:Id="18">
+            <Author z:Id="19">Островский</Author>
+            <BookSubscriber z:Ref="16" i:nil="true" />
+            <IssueDate>2017-07-23T23:06:59.8125056+03:00</IssueDate>
+            <Rare>false</Rare>
+            <Title z:Id="20">Гроза</Title>
+          </Book>
+        </Books>
+        <Name z:Id="21">Лев</Name>
+        <Phone z:Id="22">89996687957</Phone>
+      </BookSubscriber>
+      <IssueDate>2017-07-23T23:06:59.8125056+03:00</IssueDate>
       <Rare>false</Rare>
-      <Title z:Id="15">Мертвые души</Title>
+      <Title z:Id="23">Мертвые души</Title>
     </Book>
-    <Book z:Id="16">
-      <Author z:Id="17">Островский</Author>
-      <Rare>false</Rare>
-      <Title z:Id="18">Гроза</Title>
-    </Book>
-    <Book z:Id="19">
-      <Author z:Id="20">Неизвестно</Author>
+    <Book z:Ref="18" i:nil="true" />
+    <Book z:Id="24">
+      <Author z:Id="25">Неизвестно</Author>
+      <BookSubscriber z:Id="26">
+        <Books z:Id="27" z:Size="1">
+          <Book z:Ref="24" i:nil="true" />
+        </Books>
+        <Name z:Id="28">Антон</Name>
+        <Phone z:Id="29">89996687988</Phone>
+      </BookSubscriber>
+      <IssueDate>2017-07-23T23:06:59.8125056+03:00</IssueDate>
       <Rare>true</Rare>
-      <Title z:Id="21">Повесть временных лет</Title>
-    </Book>
-    <Book z:Id="22">
-      <Author z:Id="23">Пушкин</Author>
-      <Rare>false</Rare>
-      <Title z:Id="24">Руслан и Людмила</Title>
-    </Book>
-    <Book z:Id="25">
-      <Author z:Id="26">Лермонтов</Author>
-      <Rare>false</Rare>
-      <Title z:Id="27">Герой нашего времени</Title>
-    </Book>
-    <Book z:Id="28">
-      <Author z:Id="29">Кинг</Author>
-      <Rare>false</Rare>
-      <Title z:Id="30">Под куполом</Title>
+      <Title z:Id="30">Повесть временных лет</Title>
     </Book>
     <Book z:Id="31">
-      <Author z:Id="32">Rouling</Author>
+      <Author z:Id="32">Пушкин</Author>
       <Rare>false</Rare>
-      <Title z:Id="33">Harry Potter</Title>
+      <Title z:Id="33">Руслан и Людмила</Title>
+    </Book>
+    <Book z:Id="34">
+      <Author z:Id="35">Лермонтов</Author>
+      <Rare>false</Rare>
+      <Title z:Id="36">Герой нашего времени</Title>
+    </Book>
+    <Book z:Id="37">
+      <Author z:Id="38">Кинг</Author>
+      <Rare>false</Rare>
+      <Title z:Id="39">Под куполом</Title>
+    </Book>
+    <Book z:Id="40">
+      <Author z:Id="41">Rouling</Author>
+      <Rare>false</Rare>
+      <Title z:Id="42">Harry Potter</Title>
     </Book>
   </Books>
-  <Subscribers z:Size="9">
-    <Subscriber z:Id="34">
-      <Books z:Id="35" z:Size="0" />
-      <Name z:Id="36">Михаил</Name>
-      <Phone z:Id="37">89996687956</Phone>
+  <Subscribers z:Id="43" z:Size="9">
+    <Subscriber z:Id="44">
+      <Books z:Id="45" z:Size="0" />
+      <Name z:Id="46">Михаил</Name>
+      <Phone z:Id="47">89996687956</Phone>
     </Subscriber>
-    <Subscriber z:Id="38">
-      <Books z:Id="39" z:Size="0" />
-      <Name z:Ref="36" i:nil="true" />
-      <Phone z:Id="40">89996683333</Phone>
+    <Subscriber z:Id="48">
+      <Books z:Id="49" z:Size="0" />
+      <Name z:Ref="46" i:nil="true" />
+      <Phone z:Id="50">89996683333</Phone>
     </Subscriber>
-    <Subscriber z:Id="41">
-      <Books z:Id="42" z:Size="0" />
-      <Name z:Id="43">Лев</Name>
-      <Phone z:Id="44">89996687957</Phone>
+    <Subscriber z:Ref="16" i:nil="true" />
+    <Subscriber z:Ref="26" i:nil="true" />
+    <Subscriber z:Id="51">
+      <Books z:Id="52" z:Size="0" />
+      <Name z:Id="53">Николай</Name>
+      <Phone z:Id="54">89996687999</Phone>
     </Subscriber>
-    <Subscriber z:Id="45">
-      <Books z:Id="46" z:Size="0" />
-      <Name z:Id="47">Антон</Name>
-      <Phone z:Id="48">89996687988</Phone>
+    <Subscriber z:Id="55">
+      <Books z:Id="56" z:Size="0" />
+      <Name z:Id="57">Александр</Name>
+      <Phone z:Id="58">89996687101</Phone>
     </Subscriber>
-    <Subscriber z:Id="49">
-      <Books z:Id="50" z:Size="0" />
-      <Name z:Id="51">Николай</Name>
-      <Phone z:Id="52">89996687999</Phone>
+    <Subscriber z:Id="59">
+      <Books z:Id="60" z:Size="0" />
+      <Name z:Id="61">Стивен</Name>
+      <Phone z:Id="62">89996687505</Phone>
     </Subscriber>
-    <Subscriber z:Id="53">
-      <Books z:Id="54" z:Size="0" />
-      <Name z:Id="55">Александр</Name>
-      <Phone z:Id="56">89996687101</Phone>
+    <Subscriber z:Id="63">
+      <Books z:Id="64" z:Size="0" />
+      <Name z:Id="65">Наташа</Name>
+      <Phone z:Id="66">89996687606</Phone>
     </Subscriber>
-    <Subscriber z:Id="57">
-      <Books z:Id="58" z:Size="0" />
-      <Name z:Id="59">Стивен</Name>
-      <Phone z:Id="60">89996687505</Phone>
-    </Subscriber>
-    <Subscriber z:Id="61">
-      <Books z:Id="62" z:Size="0" />
-      <Name z:Id="63">Наташа</Name>
-      <Phone z:Id="64">89996687606</Phone>
-    </Subscriber>
-    <Subscriber z:Id="65">
-      <Books z:Id="66" z:Size="0" />
-      <Name z:Id="67">Нос</Name>
-      <Phone z:Id="68">89996687707</Phone>
-    </Subscriber>
-  </Subscribers>
-</Library>/Phone>
-    </Subscriber>
-    <Subscriber z:Id="57">
-      <Books z:Id="58" z:Size="0" />
-      <Name z:Id="59">Стивен</Name>
-      <Phone z:Id="60">89996687505</Phone>
-    </Subscriber>
-    <Subscriber z:Id="61">
-      <Books z:Id="62" z:Size="0" />
-      <Name z:Id="63">Наташа</Name>
-      <Phone z:Id="64">89996687606</Phone>
-    </Subscriber>
-    <Subscriber z:Id="65">
-      <Books z:Id="66" z:Size="0" />
-      <Name z:Id="67">Нос</Name>
-      <Phone z:Id="68">89996687707</Phone>
+    <Subscriber z:Id="67">
+      <Books z:Id="68" z:Size="0" />
+      <Name z:Id="69">Нос</Name>
+      <Phone z:Id="70">89996687707</Phone>
     </Subscriber>
   </Subscribers>
 </Library>

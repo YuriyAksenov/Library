@@ -294,9 +294,21 @@ namespace TestLibrary.Test
             var book2 = this._library.Books.Where(x => x.Title == "Гроза").FirstOrDefault();
             var book3 = this._library.Books.Where(x => x.Title == "Повесть временных лет").FirstOrDefault();
 
-            var library = _library.LoadFromFile("D:\\Кронштадт\\C#\\Library\\test.txt");
+            _library.SaveToFile("D:\\Кронштадт\\C#\\Library\\test.txt");
+            var library = Library.LoadFromFile("D:\\Кронштадт\\C#\\Library\\test.txt");
 
-            Assert.AreEqual(library, _library);
+            for (int i = 0; i < library.Subscribers.Count; i++)
+            {
+                Assert.AreEqual(_library.Subscribers[i], library.Subscribers[i]);
+            }
+
+            for (int i = 0; i < library.Books.Count; i++)
+            {
+                Assert.AreEqual(_library.Books[i], library.Books[i]);
+            }
+
+
+            //Assert.AreEqual(library, _library);
 
         }
 
@@ -314,7 +326,7 @@ namespace TestLibrary.Test
             this._library.SubscribeTheBookToTheSubscriber(subscriber1, book2);
             this._library.SubscribeTheBookToTheSubscriber(subscriber2, book3);
 
-            _library.SaveToFile(_library, "D:\\Кронштадт\\C#\\Library\\test.txt");
+            _library.SaveToFile( "D:\\Кронштадт\\C#\\Library\\test.txt");
         }
     }
 }

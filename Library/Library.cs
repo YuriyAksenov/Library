@@ -10,13 +10,16 @@ namespace LibraryApp.BusinessLayer
     [DataContract]
     public enum BookStateChanged
     {
+        [EnumMember]
         Subscribing,
+        [EnumMember]
         Unsubscribing
     }
 
     /// <summary>
     /// Represents errors that occur during unsubscribing.
     /// </summary>
+    [Serializable]
     public class UnsubscribingException : Exception
     {
         public Subscriber subscriber { get; }
@@ -34,6 +37,7 @@ namespace LibraryApp.BusinessLayer
     /// <summary>
     /// Represents errors that occur during Subscribing.
     /// </summary>
+    [Serializable]
     public class SubscribingException : Exception
     {
         public Subscriber subscriber { get; }
@@ -115,13 +119,13 @@ namespace LibraryApp.BusinessLayer
         /// List of the books in the whole Library
         /// </summary>
         [DataMember]
-        public List<Book> Books { get; }
+        public List<Book> Books { get; private set; }
 
         /// <summary>
         /// List of the subscriber in the whole Library
         /// </summary>
         [DataMember]
-        public List<Subscriber> Subscribers { get; }
+        public List<Subscriber> Subscribers { get; private set; }
 
         public Library() : this(new List<Book>(), new List<Subscriber>()) { }
 
@@ -294,18 +298,7 @@ namespace LibraryApp.BusinessLayer
 
         #region Save to file /Load from file
 
-        [OnDeserializing]
-        public void PrepareForDeserialization(StreamingContext context)
-        {
-            Console.WriteLine(context.Context);
-            //using (FileStream fs = new FileStream("D:\\Кронштадт\\C#\\Library\\log.txt", FileMode.OpenOrCreate))
-            //{
-            //    var array = System.Text.Encoding.Default.GetBytes(context.Context.ToString());
-            //    fs.Write(array,0, array.Length);
-            //}
-        }
-
-        public void SaveToFile(Library library, string path)
+        public static void SaveToFile(Library library, string path)
         {
             //throw new NotImplementedException();
             var serializer = new DataContractSerializer(typeof(Library), null, 1000, false, true, null);
@@ -321,7 +314,13 @@ namespace LibraryApp.BusinessLayer
 
         }
 
-        public Library LoadFromFile(string path)
+        public void SaveToFile(string path)
+        {
+            SaveToFile(this, path);
+
+        }
+
+        public static Library LoadFromFile(string path)
         {
             //Сообщение: System.Runtime.Serialization.SerializationException : Коллекция типа "System.Collections.Generic.List`1[[LibraryApp.BusinessLayer.Book, Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]", предназначенная только для возвращения, вернула значение null. Входной поток включает элементы коллекции, которые невозможно добавить, если значением экземпляра является null. Попробуйте инициализировать коллекцию в методе getter.
             var serializer = new DataContractSerializer(typeof(Library), null, 1000, false, true, null);

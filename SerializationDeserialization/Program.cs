@@ -42,7 +42,7 @@ namespace SerializationDeserialization
 
             var library = new Library(books, subscribers);
 
-            library.SaveToFile(library,"D:\\Кронштадт\\C#\\Library\\test.txt");
+            library.SaveToFile("D:\\Кронштадт\\C#\\Library\\test.txt");
             //library.LoadFromFile("D:\\Кронштадт\\C#\\Library\\test.txt");
         }
     }
