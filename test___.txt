@@ -34,7 +34,7 @@
           <Book z:Id="18">
             <Author z:Id="19">Островский</Author>
             <BookSubscriber z:Ref="16" i:nil="true" />
-            <IssueDate>2017-07-25T14:01:57.7337757+03:00</IssueDate>
+            <IssueDate>2017-07-25T13:24:58.7969465+03:00</IssueDate>
             <Rare>false</Rare>
             <Title z:Id="20">Гроза</Title>
           </Book>
@@ -42,7 +42,7 @@
         <Name z:Id="21">Лев</Name>
         <Phone z:Id="22">89996687957</Phone>
       </BookSubscriber>
-      <IssueDate>2017-07-25T14:01:57.7337757+03:00</IssueDate>
+      <IssueDate>2017-07-25T13:24:58.7969465+03:00</IssueDate>
       <Rare>false</Rare>
       <Title z:Id="23">Мертвые души</Title>
     </Book>
@@ -56,7 +56,7 @@
         <Name z:Id="28">Антон</Name>
         <Phone z:Id="29">89996687988</Phone>
       </BookSubscriber>
-      <IssueDate>2017-07-25T14:01:57.7337757+03:00</IssueDate>
+      <IssueDate>2017-07-25T13:24:58.7969465+03:00</IssueDate>
       <Rare>true</Rare>
       <Title z:Id="30">Повесть временных лет</Title>
     </Book>
