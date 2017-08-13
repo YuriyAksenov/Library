@@ -103,9 +103,9 @@ namespace LibraryApp.BusinessLayer
     [DataContract]
     public class Library
     {
-        public event EventHandler<AddBookEventArgs> AddBook;
-        public event EventHandler<AddSubscriberEventArgs> AddSubscriber;
-        public event EventHandler<BookStateChangedEventArgs> BookStateChanged;
+        public event EventHandler<EventArgs> AddBook;
+        public event EventHandler<EventArgs> AddSubscriber;
+        public event EventHandler<EventArgs> BookStateChanged;
 
         /// <summary>
         /// Returns the element at a specified index in a sequence.

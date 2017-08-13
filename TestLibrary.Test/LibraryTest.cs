@@ -242,9 +242,9 @@ namespace TestLibrary.Test
 
             Book book = new Book("Гоголь", "Нос");
 
-            library.AddBook += delegate(object sender, AddBookEventArgs e)
+            library.AddBook += delegate(object sender, EventArgs e)
             {
-                Assert.AreEqual(book, e.Book);
+                Assert.AreEqual(book, ((AddBookEventArgs)e).Book);
             };
 
             library.AddTheBookToTheLibrary(book);
@@ -258,9 +258,9 @@ namespace TestLibrary.Test
 
             Subscriber subscriber = new Subscriber("Михаил", "89996687956");
 
-            library.AddSubscriber += delegate (object sender, AddSubscriberEventArgs e)
+            library.AddSubscriber += delegate (object sender, EventArgs e)
             {
-                Assert.AreEqual(subscriber, e.Subscriber);
+                Assert.AreEqual(subscriber, ((AddSubscriberEventArgs)e).Subscriber);
             };
 
             library.AddTheSubscriberToTheLibrary(subscriber);
@@ -273,10 +273,10 @@ namespace TestLibrary.Test
             var subscriber = this._library.Subscribers.FirstOrDefault();
             var book = this._library.Books.FirstOrDefault();
 
-            _library.BookStateChanged += delegate (object sender, BookStateChangedEventArgs e)
+            _library.BookStateChanged += delegate (object sender, EventArgs e)
             {
 
-                if (e.BookStateChanged != BookStateChanged.Subscribing && e.BookStateChanged != BookStateChanged.Unsubscribing)
+                if (((BookStateChangedEventArgs)e).BookStateChanged != BookStateChanged.Subscribing && ((BookStateChangedEventArgs)e).BookStateChanged != BookStateChanged.Unsubscribing)
                 { Assert.Fail(); }
             };
 
@@ -294,8 +294,8 @@ namespace TestLibrary.Test
             var book2 = this._library.Books.Where(x => x.Title == "Гроза").FirstOrDefault();
             var book3 = this._library.Books.Where(x => x.Title == "Повесть временных лет").FirstOrDefault();
 
-            _library.SaveToFile("D:\\Кронштадт\\C#\\Library\\test.txt");
-            var library = Library.LoadFromFile("D:\\Кронштадт\\C#\\Library\\test.txt");
+            _library.SaveToFile("E:\\Kronshtadt\\C#\\Library\\test.txt");
+            var library = Library.LoadFromFile("E:\\Kronshtadt\\C#\\Library\\test.txt");
 
             for (int i = 0; i < library.Subscribers.Count; i++)
             {
@@ -326,7 +326,7 @@ namespace TestLibrary.Test
             this._library.SubscribeTheBookToTheSubscriber(subscriber1, book2);
             this._library.SubscribeTheBookToTheSubscriber(subscriber2, book3);
 
-            _library.SaveToFile( "D:\\Кронштадт\\C#\\Library\\test.txt");
+            _library.SaveToFile("E:\\Kronshtadt\\C#\\Library\\test.txt");
         }
     }
 }
